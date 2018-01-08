@@ -75,5 +75,6 @@ def tick():
     # could use >200 ms, but display gets jerky
     clock_lt.after(20, tick)
 
+root.bind("x", quit)
 tick()
 root.mainloop()
