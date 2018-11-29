@@ -22,23 +22,24 @@ root.attributes("-fullscreen", True)
 root.configure(background='black')
 
 #root.geometry("1280x1024") # set explicitly window size
+scale=0.8 # scale all fonts
 time1 = ''
-clock_lt = Label(root, font=('arial', 230, 'bold'), fg='red',bg='black')
+clock_lt = Label(root, font=('arial', int(scale*230), 'bold'), fg='red',bg='black')
 clock_lt.pack()
 
-date_iso = Label(root, font=('arial', 75, 'bold'), fg='red',bg='black')
+date_iso = Label(root, font=('arial', int(scale*75), 'bold'), fg='red',bg='black')
 date_iso.pack()
 
-date_etc = Label(root, font=('arial', 40, 'bold'), fg='red',bg='black')
+date_etc = Label(root, font=('arial', int(scale*40), 'bold'), fg='red',bg='black')
 date_etc.pack()
 
-clock_utc = Label(root, font=('arial', 230, 'bold'),fg='red', bg='black')
+clock_utc = Label(root, font=('arial', int(scale*230), 'bold'),fg='red', bg='black')
 clock_utc.pack()
 
-clock_gps = Label(root, font=('arial', 40, 'bold'),fg='red', bg='black')
+clock_gps = Label(root, font=('arial', int(scale*40), 'bold'),fg='red', bg='black')
 clock_gps.pack()
 
-clock_tai = Label(root, font=('arial', 40, 'bold'),fg='red', bg='black')
+clock_tai = Label(root, font=('arial', int(scale*40), 'bold'),fg='red', bg='black')
 clock_tai.pack()
 
 def tick():
