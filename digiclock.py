@@ -6,7 +6,7 @@
 # Anders E. Wallin, 2015-04-24
 # GPLv3 license.
 #
-# added: UTC, localtime, date, MJD, DOY, week
+# added: UTC, localtime, date, MJD, DOY, week, UNIX time
 from Tkinter import *
 import time
 import datetime
@@ -16,7 +16,7 @@ import jdutil # https://gist.github.com/jiffyclub/1294443
 import gpstime
 
 root = Tk()
-root.attributes("-fullscreen", True) 
+root.attributes("-fullscreen", True)
 # this should make Esc exit fullscrreen, but doesn't seem to work..
 #root.bind('<Escape>',root.attributes("-fullscreen", False))
 root.configure(background='black')
@@ -42,19 +42,25 @@ clock_gps.pack()
 clock_tai = Label(root, font=('arial', int(scale*40), 'bold'),fg='red', bg='black')
 clock_tai.pack()
 
+clock_unix = Label(root, font=('arial', int(scale*40), 'bold'),fg='red', bg='black')
+clock_unix.pack()
+
+
 def tick():
     global time1
-    dt =datetime.datetime.utcnow()
+    dt = datetime.datetime.utcnow()
     time2 = time.strftime('%H:%M:%S') # local
     time_utc = time.strftime('%H:%M:%S', time.gmtime()) # utc
+    unix_seconds = int( time.time() )
     # MJD
     date_iso_txt = time.strftime('%Y-%m-%d', time.gmtime()) + "    %.5f" % jdutil.mjd_now()
     # day, DOY, week
     date_etc_txt = "%s   DOY: %s  Week: %s" % (time.strftime('%A'), time.strftime('%j'), time.strftime('%W'))
-    
+
+    # FIXME: how do we get updated leap-seconds automatically?
     leap_secs = 37
     gps_leap_secs = leap_secs - 19
-    
+
     (gps_week, gps_s_w, gps_day, gps_s_day) = gpstime.gpsFromUTC(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, leapSecs=gps_leap_secs)
     gps_hours = math.floor( gps_s_day / 3600.0 )
     gps_minutes = math.floor( ( gps_s_day - gps_hours*3600.0 ) / 60.0 )
@@ -62,6 +68,7 @@ def tick():
     gps_txt = " GPS Time %02d:%02d:%02d \nGPS Week.Day %d.%d" % (gps_hours,gps_minutes,gps_seconds,gps_week, gps_day)
     dt_tai = dt + datetime.timedelta( seconds = leap_secs )
     tai_txt = " TAI %02d:%02d:%02d" % (dt_tai.hour, dt_tai.minute, dt_tai.second)
+    unix_txt= "UNIX %d" % unix_seconds
     if time2 != time1: # if time string has changed, update it
         time1 = time2
         clock_lt.config(text=time2)
@@ -70,6 +77,7 @@ def tick():
         date_etc.config(text=date_etc_txt)
         clock_gps.config(text=gps_txt)
         clock_tai.config(text=tai_txt)
+        clock_unix.config(text=unix_txt)
 
     # calls itself every 200 milliseconds
     # to update the time display as needed
